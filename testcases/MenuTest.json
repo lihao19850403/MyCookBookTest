@@ -1,0 +1,14 @@
+{
+    "description": "首页 - 菜谱测试。",
+    "environment": [
+        {
+            "type": "device"
+        }
+    ],
+    "driver": {
+        "type": "DeviceTest",
+        "py_file": [
+            "MenuTest.py"
+        ]
+    }
+}

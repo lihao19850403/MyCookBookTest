@@ -1,0 +1,15 @@
+{
+  "description": "应用启动测试。",
+  "environment": [
+    {
+      "type": "device"
+    }
+  ],
+  "driver": {
+    "type": "DeviceTest",
+    "py_file": [
+      "AbilityTest.py"
+    ]
+  }
+}
+

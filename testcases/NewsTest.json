@@ -1,0 +1,14 @@
+{
+    "description": "首页 - 头条测试。",
+    "environment": [
+        {
+            "type": "device"
+        }
+    ],
+    "driver": {
+        "type": "DeviceTest",
+        "py_file": [
+            "NewsTest.py"
+        ]
+    }
+}
