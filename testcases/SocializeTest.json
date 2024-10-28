@@ -1,0 +1,14 @@
+{
+    "description": "首页 - 美食圈测试。",
+    "environment": [
+        {
+            "type": "device"
+        }
+    ],
+    "driver": {
+        "type": "DeviceTest",
+        "py_file": [
+            "SocializeTest.py"
+        ]
+    }
+}
