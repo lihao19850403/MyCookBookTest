@@ -12,6 +12,7 @@
 from devicetest.core.test_case import TestCase, Step, CheckPoint
 from hypium import *
 from hypium.action.host.host import check_equal, check_greater, check_not_equal
+from hypium.model import UiParam
 
 from aw.Utils import get_title_bar_text, check_if_title_bar_exist
 
@@ -73,7 +74,10 @@ class MenuTest(TestCase):
         else:
             check_not_equal(menu_tips, None)
             last_favorite_menu_tips_card = menu_tips
-        last_favorite_menu_tips_card.click()
+        page_list = self.driver.find_all_components(BY.type("List"), 0)
+        check_not_equal(page_list, None)
+        self.driver.swipe(UiParam.UP, 90, page_list) # 列表向上滚动。
+        last_favorite_menu_tips_card.click() # 单击最后一个列表组件。
         self.driver.wait(1)
         check_if_title_bar_exist(self.driver)
         title = get_title_bar_text(self.driver)
