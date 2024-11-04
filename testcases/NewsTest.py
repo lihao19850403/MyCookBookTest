@@ -13,8 +13,6 @@ from devicetest.core.test_case import TestCase, Step, CheckPoint
 from hypium import *
 from hypium.action.host.host import check_equal
 
-from aw.Utils import get_title_bar_text, check_if_title_bar_exist
-
 class NewsTest(TestCase):
 
     def __init__(self, configs):
@@ -40,8 +38,9 @@ class NewsTest(TestCase):
         tab_bar_item = self.driver.find_component(BY.text("头条"))
         tab_bar_item.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
+        self.driver.check_component_exist(BY.xpath("//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/Stack/Text"))
+        title_bar = self.driver.find_component(BY.xpath("//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/Stack/Text"))
+        title = title_bar.getText()
         check_equal(title, "头条")
         Step("【3】列表点击测试")
         # 是否加载出了新闻内容？
@@ -54,16 +53,18 @@ class NewsTest(TestCase):
         news_tips_card = self.driver.find_component(BY.id("NewsTipsCard0"))
         news_tips_card.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
+        self.driver.check_component_exist(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
+        title_bar = self.driver.find_component(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
+        title = title_bar.getText()
         check_equal(title, "新闻")
         # 是否能跳转至浏览器页？
         self.driver.check_component_exist(BY.id("news_link"))
         news_link = self.driver.find_component(BY.id("news_link"))
         news_link.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
+        self.driver.check_component_exist(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
+        title_bar = self.driver.find_component(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
+        title = title_bar.getText()
         check_equal(title, "浏览器")
         # 返回首页。
         self.driver.press_back()

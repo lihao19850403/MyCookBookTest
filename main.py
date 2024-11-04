@@ -5,7 +5,7 @@ if __name__ == "__main__":
   # main_process("run -l AbilityTest -ta agent_mode:bin;screenshot:true")
 
   # 首页 - 头条测试。
-  # main_process("run -l NewsTest -ta agent_mode:bin;screenshot:true")
+  main_process("run -l NewsTest -ta agent_mode:bin;screenshot:true")
 
   # 首页 - 菜谱测试。
   # main_process("run -l MenuTest -ta agent_mode:bin;screenshot:true")
@@ -14,4 +14,4 @@ if __name__ == "__main__":
   # main_process("run -l SocializeTest -ta agent_mode:bin;screenshot:true")
 
   # 首页 - 我的测试。
-  main_process("run -l MineTest -ta agent_mode:bin;screenshot:true")
+  # main_process("run -l MineTest -ta agent_mode:bin;screenshot:true")
