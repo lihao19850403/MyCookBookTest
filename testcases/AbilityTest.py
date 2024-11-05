@@ -12,6 +12,7 @@
 from devicetest.core.test_case import TestCase, Step
 from hypium import *
 
+
 class AbilityTest(TestCase):
     def __init__(self, controllers):
         self.TAG = self.__class__.__name__

@@ -22,6 +22,10 @@ class NewsTest(TestCase):
         TestCase.__init__(self, self.TAG, configs)
         self.driver = UiDriver(self.device1)
         self.driver_width, self.driver_height = self.driver.get_display_size()
+        # 第一个新闻Tips卡片。
+        self.first_news_tips_card_path: str = "//*[@type='WaterFlow']/FlowItem[1]"
+        # 原文链接。
+        self.link_component_path: str = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Scroll/Column/Column"
 
     def setup(self):
         Step("回到桌面")
@@ -48,14 +52,14 @@ class NewsTest(TestCase):
         CheckPoint("这项测试需要联网获取新闻列表后才能继续")
         # 是否能跳转至新闻详情？
         self.driver.wait(1)
-        self.driver.check_component_exist(BY.id("NewsTipsCard0"))
-        news_tips_card = self.driver.find_component(BY.id("NewsTipsCard0"))
+        self.driver.check_component_exist(BY.xpath(self.first_news_tips_card_path))
+        news_tips_card = self.driver.find_component(BY.xpath(self.first_news_tips_card_path))
         news_tips_card.click()
         self.driver.wait(1)
         check_title_bar_text_is(self.driver, "新闻")
         # 是否能跳转至浏览器页？
-        self.driver.check_component_exist(BY.id("news_link"))
-        news_link = self.driver.find_component(BY.id("news_link"))
+        self.driver.check_component_exist(BY.xpath(self.link_component_path))
+        news_link = self.driver.find_component(BY.xpath(self.link_component_path))
         news_link.click()
         self.driver.wait(1)
         check_title_bar_text_is(self.driver, "浏览器")
