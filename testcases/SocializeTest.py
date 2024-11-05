@@ -9,7 +9,7 @@
 #!!================================================================
 """
 
-from devicetest.core.test_case import TestCase, Step, CheckPoint
+from devicetest.core.test_case import TestCase, Step
 from hypium import *
 from hypium.action.host.host import check_equal
 

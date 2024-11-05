@@ -13,7 +13,7 @@ from devicetest.core.test_case import TestCase, Step, CheckPoint
 from hypium import *
 from hypium.action.host.host import check_equal, check_not_equal, check_greater
 
-from aw.Utils import check_if_title_bar_exist, get_title_bar_text
+from testcases.utils.TitleBarTextUtils import check_title_bar_text_is
 
 
 class MineTest(TestCase):
@@ -23,6 +23,8 @@ class MineTest(TestCase):
         TestCase.__init__(self, self.TAG, configs)
         self.driver = UiDriver(self.device1)
         self.driver_width, self.driver_height = self.driver.get_display_size()
+        # 每日健康提示。
+        self.today_tips_text_path: str = "//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/List/ListItemGroup[1]/ListItem/Stack/Text"
 
     def setup(self):
         Step("回到桌面")
@@ -42,14 +44,12 @@ class MineTest(TestCase):
         tab_bar_item = self.driver.find_component(BY.text("我的"))
         tab_bar_item.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
-        check_equal(title, "我的")
+        check_title_bar_text_is(self.driver, "我的")
         Step("【3】每日养生测试")
         self.driver.wait(1)
         self.driver.check_component_exist(BY.text("每日养生"))
-        self.driver.check_component_exist(BY.id("todayTips"))
-        today_tips = self.driver.find_component(BY.id("todayTips"))
+        self.driver.check_component_exist(BY.xpath(self.today_tips_text_path))
+        today_tips = self.driver.find_component(BY.xpath(self.today_tips_text_path))
         title = today_tips.getText()
         check_not_equal(title, None)
         title_length = len(title)
@@ -101,9 +101,7 @@ class MineTest(TestCase):
         check_not_equal(last_page_grid_item, None)
         last_page_grid_item.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
-        check_equal(title, "菜谱")
+        check_title_bar_text_is(self.driver, "菜谱")
 
     def teardown(self):
         Step("关闭设置应用")
