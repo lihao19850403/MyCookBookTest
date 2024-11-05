@@ -11,7 +11,9 @@
 
 from devicetest.core.test_case import TestCase, Step, CheckPoint
 from hypium import *
-from hypium.action.host.host import check_equal
+
+from testcases.utils.TitleBarTextUtils import check_title_bar_text_is
+
 
 class NewsTest(TestCase):
 
@@ -38,10 +40,7 @@ class NewsTest(TestCase):
         tab_bar_item = self.driver.find_component(BY.text("头条"))
         tab_bar_item.click()
         self.driver.wait(1)
-        self.driver.check_component_exist(BY.xpath("//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/Stack/Text"))
-        title_bar = self.driver.find_component(BY.xpath("//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/Stack/Text"))
-        title = title_bar.getText()
-        check_equal(title, "头条")
+        check_title_bar_text_is(self.driver, "头条")
         Step("【3】列表点击测试")
         # 是否加载出了新闻内容？
         self.driver.wait(1)
@@ -53,19 +52,13 @@ class NewsTest(TestCase):
         news_tips_card = self.driver.find_component(BY.id("NewsTipsCard0"))
         news_tips_card.click()
         self.driver.wait(1)
-        self.driver.check_component_exist(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
-        title_bar = self.driver.find_component(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
-        title = title_bar.getText()
-        check_equal(title, "新闻")
+        check_title_bar_text_is(self.driver, "新闻")
         # 是否能跳转至浏览器页？
         self.driver.check_component_exist(BY.id("news_link"))
         news_link = self.driver.find_component(BY.id("news_link"))
         news_link.click()
         self.driver.wait(1)
-        self.driver.check_component_exist(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
-        title_bar = self.driver.find_component(BY.xpath("//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Stack/Text"))
-        title = title_bar.getText()
-        check_equal(title, "浏览器")
+        check_title_bar_text_is(self.driver, "浏览器")
         # 返回首页。
         self.driver.press_back()
         self.driver.press_back()
