@@ -11,9 +11,8 @@
 
 from devicetest.core.test_case import TestCase, Step
 from hypium import *
-from hypium.action.host.host import check_equal
 
-from aw.Utils import check_if_title_bar_exist, get_title_bar_text
+from testcases.utils.TitleBarTextUtils import check_title_bar_text_is
 
 
 class SocializeTest(TestCase):
@@ -41,9 +40,7 @@ class SocializeTest(TestCase):
         tab_bar_item = self.driver.find_component(BY.text("美食圈"))
         tab_bar_item.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
-        check_equal(title, "美食圈")
+        check_title_bar_text_is(self.driver, "美食圈")
         Step("【3】列表点击测试")
         self.driver.wait(1 * 3)
         # 是否加载出了美食圈内容？
