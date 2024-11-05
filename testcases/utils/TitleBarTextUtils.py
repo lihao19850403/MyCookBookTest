@@ -26,3 +26,15 @@ def check_title_bar_text_is(driver: UiDriver, text: str):
     check_not_equal(title_bar, None)
     title = title_bar.getText()
     check_equal(title, text)
+
+
+def get_title_bar_text(driver: UiDriver):
+    """
+    检查标题栏文字区是否存在，并获取标题。
+    :param driver: 传入的driver参数。
+    :return: 标题栏文字区内容。
+    """
+    title_bar = find_common_title_bar_text(driver)
+    check_not_equal(title_bar, None)
+    title = title_bar.getText()
+    return title

@@ -14,7 +14,8 @@ from hypium import *
 from hypium.action.host.host import check_equal, check_greater, check_not_equal
 from hypium.model import UiParam
 
-from aw.Utils import get_title_bar_text, check_if_title_bar_exist
+from testcases.utils.TitleBarTextUtils import check_title_bar_text_is, get_title_bar_text
+
 
 class MenuTest(TestCase):
 
@@ -23,6 +24,12 @@ class MenuTest(TestCase):
         TestCase.__init__(self, self.TAG, configs)
         self.driver = UiDriver(self.device1)
         self.driver_width, self.driver_height = self.driver.get_display_size()
+        # 今日推荐消息标题横幅。
+        self.recommend_menu_header_path: str = "//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/List/ListItemGroup[1]/Row"
+        # 菜谱详情页小图片。
+        self.menu_detail_card_image_path: str = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Scroll/Column/Image"
+        # 推荐菜谱列表第一个五星。
+        self.first_star_path: str = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/List/ListItem[1]/Stack/Row/Stack/Image"
 
     def setup(self):
         Step("回到桌面")
@@ -41,9 +48,7 @@ class MenuTest(TestCase):
         tab_bar_item = self.driver.find_component(BY.text("菜谱"))
         tab_bar_item.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
-        title = get_title_bar_text(self.driver)
-        check_equal(title, "菜谱")
+        check_title_bar_text_is(self.driver, "菜谱")
         Step("【3】推荐菜谱列表点击测试")
         # 推荐菜谱列表点击测试。
         self.driver.wait(1)
@@ -51,11 +56,11 @@ class MenuTest(TestCase):
         check_not_equal(grid, None)
         CheckPoint("这项测试需要联网获取推荐菜谱列表后才能继续")
         # 是否能跳转至推荐菜谱列表？
-        self.driver.check_component_exist(BY.id("RecommendMenuHeader"))
-        self.test_add_favorite_menu("RecommendMenuHeader")
+        self.driver.check_component_exist(BY.xpath(self.recommend_menu_header_path))
+        self.test_add_favorite_menu(self.recommend_menu_header_path)
         grid = self.driver.find_all_components(BY.type("Grid"), 1)
         if grid is None:
-            self.test_add_favorite_menu("RecommendMenuHeader") # 如果取消收藏，则再加入一次。
+            self.test_add_favorite_menu(self.recommend_menu_header_path)  # 如果取消收藏，则再加入一次。
         grid = self.driver.find_all_components(BY.type("Grid"), 1)
         check_not_equal(grid, None)
         Step("【4】菜谱收藏夹列表点击测试")
@@ -65,8 +70,6 @@ class MenuTest(TestCase):
         check_not_equal(grid, None)
         # 是否能跳转至菜谱详情？
         menu_tips = self.driver.find_all_components(BY.type("GridItem"))
-        last_favorite_menu_tips_card = None
-        menu_tips_length = 0
         if isinstance(menu_tips, list):
             menu_tips_length = len(menu_tips)
             check_greater(menu_tips_length, 0)
@@ -76,16 +79,15 @@ class MenuTest(TestCase):
             last_favorite_menu_tips_card = menu_tips
         page_list = self.driver.find_all_components(BY.type("List"), 0)
         check_not_equal(page_list, None)
-        self.driver.swipe(UiParam.UP, 90, page_list) # 列表向上滚动。
-        last_favorite_menu_tips_card.click() # 单击最后一个列表组件。
+        self.driver.swipe(UiParam.UP, 90, page_list)  # 列表向上滚动。
+        last_favorite_menu_tips_card.click()  # 单击最后一个列表组件。
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
         title = get_title_bar_text(self.driver)
         pure_title = title[0: 2]
         check_equal(pure_title, "家常")
         # 是否能跳转至图片阅览页？
-        self.driver.check_component_exist(BY.id("MenuDetailCard_image"))
-        image = self.driver.find_component(BY.id("MenuDetailCard_image"))
+        self.driver.check_component_exist(BY.xpath(self.menu_detail_card_image_path))
+        image = self.driver.find_component(BY.xpath(self.menu_detail_card_image_path))
         image.click()
         self.driver.wait(1)
         self.driver.check_component_exist(BY.type("Image"))
@@ -99,10 +101,9 @@ class MenuTest(TestCase):
 
     # 测试将菜谱加入收藏。
     def test_add_favorite_menu(self, header_type_str: str):
-        recommend_menu_tips = self.driver.find_component(BY.id(header_type_str))
+        recommend_menu_tips = self.driver.find_component(BY.xpath(header_type_str))
         recommend_menu_tips.click()
         self.driver.wait(1)
-        check_if_title_bar_exist(self.driver)
         title = get_title_bar_text(self.driver)
         pure_title = title[0: 4]
         check_equal(pure_title, "今日推荐")
@@ -111,9 +112,9 @@ class MenuTest(TestCase):
         recommend_menu_count = int(num_str)
         check_greater(recommend_menu_count, 0)
         # 是否能将菜谱加入收藏？
-        star = self.driver.find_all_components(BY.id("LHMarkedStar"), 0)
+        star = self.driver.find_component(BY.xpath(self.first_star_path))
         check_not_equal(star, None)
         star.click()
         self.driver.wait(1)
-        self.driver.press_back() # 返回首页检查菜谱收藏结果。
+        self.driver.press_back()  # 返回首页检查菜谱收藏结果。
         self.driver.wait(1)
