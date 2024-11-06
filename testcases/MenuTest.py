@@ -26,8 +26,6 @@ class MenuTest(TestCase):
         self.driver_width, self.driver_height = self.driver.get_display_size()
         # 今日推荐消息标题横幅。
         self.recommend_menu_header_path: str = "//Navigation/NavBar/NavBarContent/Tabs/Swiper/TabContent/Column/List/ListItemGroup[1]/Row"
-        # 菜谱详情页小图片。
-        self.menu_detail_card_image_path: str = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Scroll/Column/Image"
         # 推荐菜谱列表第一个五星。
         self.first_star_path: str = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/List/ListItem[1]/Stack/Row/Stack/Image"
 
@@ -58,6 +56,9 @@ class MenuTest(TestCase):
         # 是否能跳转至推荐菜谱列表？
         self.driver.check_component_exist(BY.xpath(self.recommend_menu_header_path))
         self.test_add_favorite_menu(self.recommend_menu_header_path)
+        page_list = self.driver.find_all_components(BY.type("List"), 0)
+        check_not_equal(page_list, None)
+        self.driver.swipe(UiParam.UP, 90, page_list)  # 列表向上滚动。
         grid = self.driver.find_all_components(BY.type("Grid"), 1)
         if grid is None:
             self.test_add_favorite_menu(self.recommend_menu_header_path)  # 如果取消收藏，则再加入一次。
@@ -86,8 +87,8 @@ class MenuTest(TestCase):
         pure_title = title[0: 2]
         check_equal(pure_title, "家常")
         # 是否能跳转至图片阅览页？
-        self.driver.check_component_exist(BY.xpath(self.menu_detail_card_image_path))
-        image = self.driver.find_component(BY.xpath(self.menu_detail_card_image_path))
+        image = self.find_menu_detail_card_image()
+        check_not_equal(image, None)
         image.click()
         self.driver.wait(1)
         self.driver.check_component_exist(BY.type("Image"))
@@ -118,3 +119,12 @@ class MenuTest(TestCase):
         self.driver.wait(1)
         self.driver.press_back()  # 返回首页检查菜谱收藏结果。
         self.driver.wait(1)
+
+    def find_menu_detail_card_image(self):
+        # 菜谱详情页小图片(竖屏模式)。
+        menu_detail_card_image_path = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Scroll/Column/Image"
+        image = self.driver.find_component(BY.xpath(menu_detail_card_image_path))
+        if image is None:
+            menu_detail_card_image_path = "//Navigation/NavigationContent/NavDestination/NavDestinationContent/Column/Scroll/Row/Image"
+            image = self.driver.find_component(BY.xpath(menu_detail_card_image_path))
+        return image

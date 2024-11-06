@@ -11,6 +11,8 @@
 
 from devicetest.core.test_case import TestCase, Step, CheckPoint
 from hypium import *
+from hypium.action.host.host import check_not_equal
+from hypium.model import UiParam
 
 from testcases.utils.TitleBarTextUtils import check_title_bar_text_is
 
@@ -57,6 +59,9 @@ class NewsTest(TestCase):
         news_tips_card.click()
         self.driver.wait(1)
         check_title_bar_text_is(self.driver, "新闻")
+        page_scroll = self.driver.find_all_components(BY.type("Scroll"), 0)
+        check_not_equal(page_scroll, None)
+        self.driver.swipe(UiParam.UP, 90, page_scroll)  # 页面向上滚动。
         # 是否能跳转至浏览器页？
         self.driver.check_component_exist(BY.xpath(self.link_component_path))
         news_link = self.driver.find_component(BY.xpath(self.link_component_path))
